@@ -4,6 +4,7 @@ No material is imported from other directories in the user's workspace.
 """
 from html import escape
 from deep_readings import NOTES
+from site_config import REPO
 
 def section(key, number, title, body):
     return f'<section id="{key}"><h2><span>{number:02}</span>{title}</h2>{body}</section>'
@@ -20,7 +21,13 @@ def refs(items):
 def exercise(title, body):
     return f'<aside class="experiment"><h3>{title}</h3>{body}</aside>'
 
-INTRO = '''<div class="abstract"><strong>核心问题</strong><p>一个已经会规划、调用工具和使用记忆的 Agent，进入物理世界以后，还缺少什么？这份读物沿着二十篇论文中的问题变化，讨论计划如何变成动作、失败如何成为证据，以及经验如何带来下一次改进。</p></div>'''
+def star_button():
+    """阅读起点的 Star 入口；REPO 为空时不渲染。"""
+    if not REPO:
+        return ''
+    return f'''<div class="star-cta"><a class="star-button" href="https://github.com/{escape(REPO)}" target="_blank" rel="noopener"><span aria-hidden="true">★</span>在 GitHub 上 Star 这份讲义</a><p>觉得这二十篇的整理有用，就点个 Star；读到有疑问的数字或边界，可以在每页底部的讨论区留言。仓库：<a href="https://github.com/{escape(REPO)}">{escape(REPO)}</a></p></div>'''
+
+INTRO = '''<div class="abstract"><strong>核心问题</strong><p>一个已经会规划、调用工具和使用记忆的 Agent，进入物理世界以后，还缺少什么？这份读物沿着二十篇论文中的问题变化，讨论计划如何变成动作、失败如何成为证据，以及经验如何带来下一次改进。</p></div>''' + star_button()
 INTRO += section('map',1,'先看问题，再记住系统名字', '''<p>设想机器人要整理早餐台：把餐具放进抽屉，把纸盒移到回收区，并留下仍在使用的杯子。任务理解只是开始。抽屉可能关闭，餐具可能互相遮挡，抓取后还可能滑落；计划中的每一个名词和动词都必须对应实际的状态与能力。</p><p>我们用一个工作定义贯穿全书：<strong>Agentic Robotics 研究如何让目标、环境观测、行为选择、物理执行和反馈形成可持续的决策过程。</strong>这里的 Agent 可以调用已有技能、生成程序、提出几何约束或编排学习策略。各篇论文覆盖的范围并不相同。</p>
 <figure class="loop-figure"><div class="loop-row"><div><small>REPRESENT</small><b>目标与世界</b><span>语义 · 场景 · 几何</span></div><i aria-hidden="true">→</i><div><small>DECIDE</small><b>选择与构造</b><span>技能 · 程序 · 约束</span></div><i aria-hidden="true">→</i><div><small>EXECUTE</small><b>控制与接触</b><span>策略 · 规划器 · 设备</span></div></div><div class="loop-returns"><p><span aria-hidden="true">←</span><b>回到 REPRESENT</b>观测更新 · 独立验证任务是否真的完成</p><p class="return-short"><span aria-hidden="true">←</span><b>回到 DECIDE</b>重试 · 换技能 · 换顺序 · 先改变导致失败的条件</p></div><div class="loop-memory"><small>MEMORY</small><b>跨任务经验</b><span>技能 · 修复知识 · 执行记忆</span><em aria-hidden="true">↕ 决策前被检索，执行后被写入</em></div><figcaption>图 1 · 本讲义的概念框架。用于组织阅读，不对应某一篇论文的完整架构。三条回路的去向不同：证据更新表示，判断改变选择，经验跨任务保留；正文按这个区分讨论各篇论文。</figcaption></figure>
 <p>阅读时始终问：这篇工作改变了哪一条连接？提供了新的表示、更好的技能、更有效的调度，还是更可靠的验证？用这个问题定位贡献，比把所有系统都记成“LLM + robot”更有帮助。</p>''')
