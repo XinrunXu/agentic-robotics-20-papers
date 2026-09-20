@@ -25,3 +25,9 @@
 .paper-figure{margin:20px 0 28px;border:1px solid var(--line);background:#fff;padding:14px}.paper-figure a{display:block;line-height:0}.paper-figure img{width:100%;height:auto;background:#fbfcfd}.paper-figure figcaption{margin-top:13px}.paper-figure figcaption b{display:block;font-size:12px;color:var(--blue);letter-spacing:.3px;margin-bottom:4px}
 @media(max-width:760px){.paper-figure{padding:10px}}
 @media print{.paper-figure{break-inside:avoid}.paper-figure img{max-height:11cm;object-fit:contain}}
+
+.scene{border-left:3px solid var(--blue);background:#f6f9fb;padding:16px 22px;margin:22px 0}.scene .small-label{display:block;margin-bottom:7px}.scene p{margin:0;font-size:16px;line-height:1.95}
+@media(max-width:760px){.scene{padding:14px 16px}.scene p{font-size:15px}}
+@media print{.scene{break-inside:avoid}}
+
+.recall-answer{border-top:1px solid var(--line);border-bottom:none;margin:18px 0 0;padding:14px 0 0}.recall-answer .answer p b{display:block;font-size:12px;color:var(--blue);letter-spacing:.3px;margin-bottom:4px}.recall-answer .answer p{margin:0 0 16px}.recall-answer .answer p:last-child{margin-bottom:0}

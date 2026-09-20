@@ -99,20 +99,25 @@ def paper_body(p, number):
     body = f'''<nav class="paper-breadcrumb" aria-label="论文位置"><a href="papers.html#{p['key']}">20 篇论文时间线</a><span> / {number:02}</span><a href="{p['chapter']}.html">回到相关章节 →</a></nav><p class="paper-full-title">{e(p['title'])}</p><div class="paper-bibliography"><span>首发 {p['date']}</span><span>精读版本 {n['version']}</span><a href="{source_url(p)}">阅读原文 ↗</a></div><div class="abstract paper-memory"><strong>先记住这组证据</strong><p>{e(n['result'])}</p></div>'''
     body += '<nav class="paper-jumps" aria-label="精读快速跳转"><a href="#method">看方法</a><a href="#results">看实验</a><a href="#ablation">看消融与边界</a><a href="#practice">做研究练习</a></nav>'
     body += f'<section id="problem"><h2><span>01</span>这篇要解决什么？</h2><p>{e(n["why"])}</p></section>'
-    body += f'<section id="method"><h2><span>02</span>方法怎样运转？</h2>{paper_figure(p["key"])}<ol class="method-steps">'
+    body += f'<section id="scene"><h2><span>02</span>先看一个场景</h2><div class="scene"><span class="small-label">具体情境 · 先有画面，再看机制</span><p>{e(n["scene"])}</p></div></section>'
+    body += f'<section id="method"><h2><span>03</span>方法怎样运转？</h2>{paper_figure(p["key"])}<ol class="method-steps">'
     for i,(title,desc) in enumerate(n['steps'],1):
         body += f'<li><span class="step-index">{i:02}</span><div><h3>{e(title)}</h3><p>{e(desc)}</p></div></li>'
     body += f'</ol><figure class="mechanism"><pre><code>{e(n["code"])}</code></pre><figcaption>机制示意 · 讲义编写的简化流程或伪代码，用来解释信息流；不是论文源码或可直接部署的控制程序。</figcaption></figure><p class="source-note">方法与结果的原文定位见<a href="#sources">本页引用</a>。</p></section>'
     example_label = '原文案例解读' if n['example'].startswith('原文') else '教学推演'
-    body += f'<section id="example"><h2><span>03</span>跟着一个例子想一遍</h2><div class="worked-example"><span class="small-label">{example_label}</span><p>{e(n["example"])}</p></div></section>'
-    body += f'<section id="results"><h2><span>04</span>实验到底表现怎样？</h2><p>{e(n["setup"])}</p><p class="measurement-label">作者报告的实验结果 · {n["version"]}</p>'
+    body += f'<section id="example"><h2><span>04</span>跟着这个场景走一遍</h2><div class="worked-example"><span class="small-label">{example_label}</span><p>{e(n["example"])}</p></div></section>'
+    body += f'<section id="results"><h2><span>05</span>实验到底表现怎样？</h2><p>{e(n["setup"])}</p><p class="measurement-label">作者报告的实验结果 · {n["version"]}</p>'
     body += table([e(x) for x in n['headers']], [[e(x) for x in row] for row in n['rows']])
     body += f'<p class="source-note">原始证据：{source_links}</p><div class="result-interpretation"><strong>怎样读这组数字</strong><p>{e(n["findings"])}</p></div></section>'
-    body += f'<section id="ablation"><h2><span>05</span>收益来自哪里，又停在哪里？</h2><h3>消融与机制证据</h3><p>{e(n["ablation"])}</p><h3>结论的适用边界</h3><p>{e(n["boundary"])}</p></section>'
-    body += f'<section id="connect"><h2><span>06</span>放回二十篇的脉络</h2><p>{e(n["transfer"])}</p><p><a href="{p["chapter"]}.html">回到问题章节，对照相关方法 →</a></p></section>'
-    body += f'<section id="practice"><h2><span>07</span>把阅读变成一个小研究</h2><div class="experiment"><span class="small-label">讲义提出的研究练习 · 不是论文复现结果</span><p>{e(n["exercise"])}</p></div>'
+    body += f'<section id="ablation"><h2><span>06</span>收益来自哪里，又停在哪里？</h2><h3>消融与机制证据</h3><p>{e(n["ablation"])}</p><h3>结论的适用边界</h3><p>{e(n["boundary"])}</p></section>'
+    body += f'<section id="connect"><h2><span>07</span>放回二十篇的脉络</h2><p>{e(n["transfer"])}</p><p><a href="{p["chapter"]}.html">回到问题章节，对照相关方法 →</a></p></section>'
+    body += f'<section id="practice"><h2><span>08</span>把阅读变成一个小研究</h2><div class="experiment"><span class="small-label">讲义提出的研究练习 · 不是论文复现结果</span><p>{e(n["exercise"])}</p></div>'
     body += think('先自己回答：这项实验怎样才有解释力？', e(n['answer']))
-    body += f'<div class="recall"><strong>合上原文后，试着回答</strong><ol><li>用自己的话说出这篇改变了哪个模块。</li><li>画出它的输入、输出和一次失败如何被处理。</li><li>复述一个结果，同时说清基线、指标与实验条件。</li></ol><p>{e(n["takeaway"])}</p></div></section>'
+    body += '<div class="recall"><strong>合上原文后，试着回答</strong><ol><li>用自己的话说出这篇改变了哪个模块。</li><li>画出它的输入、输出和一次失败如何被处理。</li><li>复述一个结果，同时说清基线、指标与实验条件。这一问不给答案，材料在第 05 节。</li></ol>'
+    body += ('<details class="reflection recall-answer"><summary>先自己答，再看前两问的参考答案</summary><div class="answer">'
+             f'<p><b>这篇改了哪个模块</b>{e(n["recall_module"])}</p>'
+             f'<p><b>输入、输出与一次失败如何被处理</b>{e(n["recall_io"])}</p></div></details>')
+    body += f'<p>{e(n["takeaway"])}</p></div></section>'
     body += f'<section id="sources"><h2><span>↗</span>带着位置回到原文</h2><p class="source-note">首发日期用于时间排序；以下方法与结果对应 {n["version"]}。数据为论文作者报告，本讲义没有独立复现实验。</p><ul class="source-list">'
     body += ''.join(f'<li><a href="{source_url(p,anchor)}">{e(label)} ↗</a></li>' for label,anchor in n['sources'])
     body += '</ul></section>'
@@ -125,7 +130,7 @@ if __name__ == '__main__':
         prev = (pages[i-1][0],pages[i-1][1]) if i else None
         nxt = (pages[i+1][0],pages[i+1][1]) if i+1 < len(pages) else None
         render_page(slug,title,f'{i:02} / AGENTIC ROBOTICS READER',intro,body,nav,toc,prev,nxt)
-    paper_toc = [('problem','问题切口'),('method','方法拆解'),('example','具体例子'),('results','设置与结果'),('ablation','消融与边界'),('connect','论文联系'),('practice','研究与回忆'),('sources','原文定位')]
+    paper_toc = [('problem','问题切口'),('scene','具体场景'),('method','方法拆解'),('example','跟着走一遍'),('results','设置与结果'),('ablation','消融与边界'),('connect','论文联系'),('practice','研究与回忆'),('sources','原文定位')]
     for i,p in enumerate(PAPERS):
         prev = (f'paper-{PAPERS[i-1]["key"]}.html', PAPERS[i-1]['name']) if i else ('papers.html','论文时间线')
         nxt = (f'paper-{PAPERS[i+1]["key"]}.html', PAPERS[i+1]['name']) if i+1 < len(PAPERS) else None
