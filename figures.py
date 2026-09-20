@@ -1,10 +1,12 @@
 """每篇精读中引用的原文框图 / 方法图。
 
-图片不复制到本仓库，而是直接引用 arXiv 提供的 HTML 版插图，版权归论文作者。
+图片文件保存在 `docs/figures/`，由 `fetch_figures.py` 从 arXiv 的 HTML 版下载；
+版权归论文作者，页面上保留出处、版本与跳回原文图注的链接。
 `ver` 为图片所在的 arXiv 版本，正常与精读引用的版本一致；不一致时用 `note` 说明。
 `anchor` 是原文 HTML 中该图的锚点，用于点击图片跳回原文图注。
 `what` 同时作为图片的替代文本，描述图里画了什么，不替代论文主张。
 """
+from pathlib import PurePosixPath
 FIGURES = {
  'saycan': dict(ver='2204.01691v2', path='figures/intro.png', anchor='S0.F1', label='图 1',
   what='语言模型给出与任务相关的候选技能，价值函数给出当前状态下的可执行性，两者结合后决定下一步'),
@@ -48,3 +50,17 @@ FIGURES = {
  'roboharness': dict(ver='2607.18060v2', path='harness.png', anchor='S3.F1', label='图 1',
   what='异构策略与理解、记忆、执行三类技能库组成的整体框架'),
 }
+
+def local_file(key):
+    """仓库内的图片文件名：论文 key + 原图扩展名。"""
+    return f'{key}{PurePosixPath(FIGURES[key]["path"]).suffix}'
+
+def remote_url(key):
+    """图片在 arXiv 上的原始位置，用于下载与标注出处。"""
+    f = FIGURES[key]
+    return f'https://arxiv.org/html/{f["ver"]}/{f["path"]}'
+
+def origin_url(key):
+    """原文中该图所在位置，点击图片跳到这里看完整图注。"""
+    f = FIGURES[key]
+    return f'https://arxiv.org/html/{f["ver"]}#{f["anchor"]}'

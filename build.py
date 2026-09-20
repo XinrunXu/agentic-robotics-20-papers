@@ -7,7 +7,7 @@ import hashlib
 from content import CHAPTERS, table, think
 from papers import PAPERS
 from deep_readings import NOTES
-from figures import FIGURES
+from figures import FIGURES, local_file, origin_url
 from site_config import REPO, DISCUSSION_CATEGORY, GISCUS
 
 ROOT = Path(__file__).parent
@@ -68,17 +68,28 @@ def source_url(p, anchor=''):
     kind = n.get('source_kind', 'html')
     return f'https://arxiv.org/{kind}/{p["arxiv"]}{n["version"]}' + (f'#{anchor}' if anchor else '')
 
+def png_size(path):
+    """从 PNG 头部读出像素尺寸，写进 img 标签避免加载时布局跳动。"""
+    head = path.read_bytes()[:24]
+    if not head.startswith(b'\x89PNG\r\n\x1a\n') or head[12:16] != b'IHDR':
+        return ''
+    width = int.from_bytes(head[16:20], 'big')
+    height = int.from_bytes(head[20:24], 'big')
+    return f' width="{width}" height="{height}"'
+
 def paper_figure(key):
-    """论文自己的框图 / 方法图，直接引用 arXiv 的 HTML 版插图。"""
+    """论文自己的框图 / 方法图；图片文件由 fetch_figures.py 下载到 docs/figures/。"""
     f = FIGURES.get(key)
     if not f:
         return ''
-    src = f'https://arxiv.org/html/{f["ver"]}/{f["path"]}'
-    origin = f'https://arxiv.org/html/{f["ver"]}#{f["anchor"]}'
+    name = local_file(key)
+    stored = DIST / 'figures' / name
+    if not stored.is_file():
+        raise SystemExit(f'缺少图片 docs/figures/{name}，请先运行 python3 fetch_figures.py {key}')
     note = ' ' + escape(f['note']) if f.get('note') else ''
-    return (f'<figure class="paper-figure"><a href="{origin}" target="_blank" rel="noopener">'
-            f'<img src="{src}" alt="{escape(f["what"])}" loading="lazy" decoding="async"></a>'
-            f'<figcaption><b>原文 {f["label"]}</b>{escape(f["what"])}。图片由 arXiv 提供（{f["ver"]}），'
+    return (f'<figure class="paper-figure"><a href="{origin_url(key)}" target="_blank" rel="noopener">'
+            f'<img src="figures/{name}" alt="{escape(f["what"])}" loading="lazy" decoding="async"{png_size(stored)}></a>'
+            f'<figcaption><b>原文 {f["label"]}</b>{escape(f["what"])}。图片转载自 arXiv {f["ver"]}，'
             f'版权归论文作者；点击图片查看原文图注 ↗{note}</figcaption></figure>')
 
 def paper_body(p, number):
