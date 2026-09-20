@@ -1,13 +1,13 @@
-# 具身 VLA / Agentic Robotics · 20 篇论文精读
+# 具身 VLA / Agentic Robotics 论文精读
 
-一个无依赖的静态网页讲义：按时间顺序精读 2022.04—2026.07 的 20 篇具身智能论文（SayCan、Code as Policies、RT-2、π₀.₅、AtomicVLA、Harness VLA、RoboHarness 等），并把它们串成六条问题线索。面向已有 Agent 基础、想进入 Agentic Robotics 的读者。
+一个无依赖的静态网页讲义：按时间顺序精读 2022.04 以来的具身智能论文（SayCan、Code as Policies、RT-2、π₀.₅、AtomicVLA、Harness VLA、RoboHarness 等），并把它们串成六条问题线索。面向已有 Agent 基础、想进入 Agentic Robotics 的读者。
 
 每页底部有讨论区，欢迎就某个数字、某条边界或某个推演提问。
 
 ## 网页入口
 
 - 阅读起点：`docs/index.html`
-- 20 篇时间线：`docs/papers.html`
+- 论文时间线：`docs/papers.html`
 - 单篇精读：`docs/paper-<key>.html`，例如 `docs/paper-harness-vla.html`
 - 结构化数据：`docs/papers.json`
 
@@ -38,13 +38,13 @@ python3 -m http.server 8765 --bind 127.0.0.1 --directory docs
 ## 修改内容后重新生成
 
 ```sh
-python3 build.py    # 生成 docs/ 下的 29 个页面
+python3 build.py    # 生成 docs/ 下的全部页面
 python3 verify.py   # 检查内链、锚点、资源、文献范围与实验约束
 ```
 
 - `content.py`：正文各章、思考题与设备路线。
-- `papers.py`：20 篇文献的元数据与简要阅读提示。
-- `deep_readings.py`：20 篇完整精读、版本、实验数据与原文定位。
+- `papers.py`：各篇文献的元数据与简要阅读提示；篇数由这里决定，正文与检查脚本自动跟随。
+- `deep_readings.py`：每篇的完整精读、版本、实验数据与原文定位。
 - `figures.py`：每篇引用的原文框图 / 方法图位置、版本、锚点与中文说明。
 - `fetch_figures.py`：按 `figures.py` 从 arXiv 下载图片到 `docs/figures/`（`--force` 重新下载）。
 - `build.py`：静态页面生成器。
@@ -58,3 +58,10 @@ python3 verify.py   # 检查内链、锚点、资源、文献范围与实验约�
 `site_config.py` 里的 `REPO` 决定讨论入口指向哪个仓库。只填 `REPO` 时，每页显示一个指向该仓库 Discussions 的链接；在 <https://giscus.app> 生成 `repo_id` 与 `category_id` 并填入 `GISCUS` 后，评论区会直接嵌在每页底部，按页面路径分成独立话题。改完运行 `python3 build.py`。
 
 前提：仓库公开、已在 Settings 里打开 Discussions、并为仓库安装 giscus 应用。
+
+## 增加一篇文献
+
+1. `papers.py` 加一条元数据，保持按 arXiv 首次提交日期排序。
+2. `deep_readings.py` 加一条精读，字段与既有条目一致。
+3. `figures.py` 加一条原文框图位置，再运行 `python3 fetch_figures.py <key>` 下载图片。
+4. `python3 build.py && python3 verify.py`。篇数、页数与文案中的数字都由 `papers.py` 推导，无需手改。

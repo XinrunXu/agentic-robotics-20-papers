@@ -1,6 +1,6 @@
 """把每篇论文的框图 / 方法图从 arXiv 下载到 docs/figures/。
 
-用法：python3 fetch_figures.py [key ...]        不带参数则检查全部 20 篇，
+用法：python3 fetch_figures.py [key ...]        不带参数则检查全部论文，
 已存在的文件默认跳过，加 --force 重新下载。图片版权归论文作者，本脚本只记录来源。
 """
 import sys

@@ -6,7 +6,7 @@ REPO 为空时页面不含讨论入口；填上 "用户名/仓库名" 就会出�
 Discussions 的链接；再补上 GISCUS 里的两个 id，讨论区会直接嵌在每页底部，
 按页面路径分成独立话题。
 """
-REPO = 'XinrunXu/agentic-robotics-20-papers'
+REPO = 'XinrunXu/awesome-agentic-robotics-papers'
 
 # GitHub Discussions 中用于承载页面评论的分类名称，需与仓库里的分类一致。
 DISCUSSION_CATEGORY = 'Announcements'

@@ -32,9 +32,11 @@ class Page(HTMLParser):
 
 def main():
     pages = {p.name: Page(p.read_text()) for p in DIST.glob('*.html')}
-    assert len(pages) == 29, f'Expected nine chapters and twenty readings, got {len(pages)}'
+    # 页面 = 各章 + 时间线页 + 每篇精读
+    expected_pages = len(CHAPTERS) + 1 + len(PAPERS)
+    assert len(pages) == expected_pages, f'Expected {expected_pages} pages, got {len(pages)}'
     assert set(NOTES) == {p['key'] for p in PAPERS}
-    assert len(PAPERS) == len({p['arxiv'] for p in PAPERS}) == 20
+    assert len(PAPERS) == len({p['arxiv'] for p in PAPERS})
     assert [p['date'] for p in PAPERS] == sorted(p['date'] for p in PAPERS)
     assert all(p[k].strip() for p in PAPERS for k in ('problem','mechanism','evidence','boundary','question','connection'))
     for name,page in pages.items():
@@ -83,7 +85,7 @@ def main():
             assert stats['inside_successes']+stats['outside_successes'] == stats['successes']
     result = dict(pages=len(pages),papers=len(PAPERS),deep_readings=len(NOTES),
                   evidence_tables=len(NOTES),local_links='all resolve',
-                  reflection_pages=27,equipment_routes=3,lab='paired conditions and budget checks passed')
+                  reflection_pages=sum('<details class="reflection"' in (DIST/name).read_text() for name in pages),equipment_routes=3,lab='paired conditions and budget checks passed')
     print(json.dumps(result,ensure_ascii=False,indent=2))
 
 

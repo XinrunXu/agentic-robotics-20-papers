@@ -4,7 +4,10 @@ No material is imported from other directories in the user's workspace.
 """
 from html import escape
 from deep_readings import NOTES
+from papers import PAPERS
 from site_config import REPO
+
+N = len(PAPERS)  # 篇数统一由 papers.py 决定，增删文献时正文不必手改
 
 def section(key, number, title, body):
     return f'<section id="{key}"><h2><span>{number:02}</span>{title}</h2>{body}</section>'
@@ -25,9 +28,9 @@ def star_button():
     """阅读起点的 Star 入口；REPO 为空时不渲染。"""
     if not REPO:
         return ''
-    return f'''<div class="star-cta"><a class="star-button" href="https://github.com/{escape(REPO)}" target="_blank" rel="noopener"><span aria-hidden="true">★</span>在 GitHub 上 Star 这份讲义</a><p>觉得这二十篇的整理有用，就点个 Star；读到有疑问的数字或边界，可以在每页底部的讨论区留言。仓库：<a href="https://github.com/{escape(REPO)}">{escape(REPO)}</a></p></div>'''
+    return f'''<div class="star-cta"><a class="star-button" href="https://github.com/{escape(REPO)}" target="_blank" rel="noopener"><span aria-hidden="true">★</span>在 GitHub 上 Star 这份讲义</a><p>觉得这{N} 篇的整理有用，就点个 Star；读到有疑问的数字或边界，可以在每页底部的讨论区留言。仓库：<a href="https://github.com/{escape(REPO)}">{escape(REPO)}</a></p></div>'''
 
-INTRO = '''<div class="abstract"><strong>核心问题</strong><p>一个已经会规划、调用工具和使用记忆的 Agent，进入物理世界以后，还缺少什么？这份读物沿着二十篇论文中的问题变化，讨论计划如何变成动作、失败如何成为证据，以及经验如何带来下一次改进。</p></div>''' + star_button()
+INTRO = f'''<div class="abstract"><strong>核心问题</strong><p>一个已经会规划、调用工具和使用记忆的 Agent，进入物理世界以后，还缺少什么？这份读物沿着{N} 篇论文中的问题变化，讨论计划如何变成动作、失败如何成为证据，以及经验如何带来下一次改进。</p></div>''' + star_button()
 INTRO += section('map',1,'先看问题，再记住系统名字', '''<p>设想机器人要整理早餐台：把餐具放进抽屉，把纸盒移到回收区，并留下仍在使用的杯子。任务理解只是开始。抽屉可能关闭，餐具可能互相遮挡，抓取后还可能滑落；计划中的每一个名词和动词都必须对应实际的状态与能力。</p><p>我们用一个工作定义贯穿全书：<strong>Agentic Robotics 研究如何让目标、环境观测、行为选择、物理执行和反馈形成可持续的决策过程。</strong>这里的 Agent 可以调用已有技能、生成程序、提出几何约束或编排学习策略。各篇论文覆盖的范围并不相同。</p>
 <figure class="loop-figure"><div class="loop-row"><div><small>REPRESENT</small><b>目标与世界</b><span>语义 · 场景 · 几何</span></div><i aria-hidden="true">→</i><div><small>DECIDE</small><b>选择与构造</b><span>技能 · 程序 · 约束</span></div><i aria-hidden="true">→</i><div><small>EXECUTE</small><b>控制与接触</b><span>策略 · 规划器 · 设备</span></div></div><div class="loop-returns"><p><span aria-hidden="true">←</span><b>回到 REPRESENT</b>观测更新 · 独立验证任务是否真的完成</p><p class="return-short"><span aria-hidden="true">←</span><b>回到 DECIDE</b>重试 · 换技能 · 换顺序 · 先改变导致失败的条件</p></div><div class="loop-memory"><small>MEMORY</small><b>跨任务经验</b><span>技能 · 修复知识 · 执行记忆</span><em aria-hidden="true">↕ 决策前被检索，执行后被写入</em></div><figcaption>图 1 · 本讲义的概念框架。用于组织阅读，不对应某一篇论文的完整架构。三条回路的去向不同：证据更新表示，判断改变选择，经验跨任务保留；正文按这个区分讨论各篇论文。</figcaption></figure>
 <p>阅读时始终问：这篇工作改变了哪一条连接？提供了新的表示、更好的技能、更有效的调度，还是更可靠的验证？用这个问题定位贡献，比把所有系统都记成“LLM + robot”更有帮助。</p>''')
@@ -39,7 +42,7 @@ INTRO += section('route',2,'按问题走一遍，再沿时间线回看', '''<p>�
 <a href="systems.html"><b>05 · 一个系统如何持续运行？</b><span>RoboOS · PhyAgentOS</span></a>
 <a href="evaluation.html"><b>06 · 什么才算可信的改进？</b><span>CaP-X · 对照实验 · 预算与泛化</span></a></div>
 <p>第一轮先读每章解释并回答思考题；第二轮选两到三篇有关联的论文，检查方法和消融；第三轮进入<a href="experiments.html">按设备开展实验</a>，写出你自己的假设。</p>''')
-INTRO += section('outcomes',3,'读完后，用三个产出来检验理解', '''<ol class="outcomes"><li><strong>一张你自己的系统图</strong><p>在每个模块旁写出输入、输出和失败条件，能说明哪些能力来自模型，哪些来自接口与底层控制。</p></li><li><strong>一份有条件的论文比较</strong><p>选择两篇工作，比较观察权限、动作抽象、数据、重试与计算预算，解释哪些结果可以比较。</p></li><li><strong>一个能被否定的研究假设</strong><p>写出设备条件、基线、唯一主要改动、测量指标，以及怎样的结果会让你放弃最初判断。</p></li></ol><p class="note">范围说明：这是一条以语言规划、代码控制、技能学习与策略编排为重点的阅读路线，主要围绕机器人操作与移动操作。它不覆盖机器人学的所有分支，也不把这二十篇定义为唯一的核心文献。</p>'''+think('起始问题：一个强大的 VLA 是否还需要 Agent？','先把目标拆开：如果任务固定、单次策略足够可靠，外部 agent 可能增加成本；如果需要消歧、跨技能组合、检查失败或利用历史经验，外部决策层可能有价值。需要用具体任务与同预算实验回答，不能仅凭架构名字决定。'))
+INTRO += section('outcomes',3,'读完后，用三个产出来检验理解', f'''<ol class="outcomes"><li><strong>一张你自己的系统图</strong><p>在每个模块旁写出输入、输出和失败条件，能说明哪些能力来自模型，哪些来自接口与底层控制。</p></li><li><strong>一份有条件的论文比较</strong><p>选择两篇工作，比较观察权限、动作抽象、数据、重试与计算预算，解释哪些结果可以比较。</p></li><li><strong>一个能被否定的研究假设</strong><p>写出设备条件、基线、唯一主要改动、测量指标，以及怎样的结果会让你放弃最初判断。</p></li></ol><p class="note">范围说明：这是一条以语言规划、代码控制、技能学习与策略编排为重点的阅读路线，主要围绕机器人操作与移动操作。它不覆盖机器人学的所有分支，也不把这{N} 篇定义为唯一的核心文献。</p>'''+think('起始问题：一个强大的 VLA 是否还需要 Agent？','先把目标拆开：如果任务固定、单次策略足够可靠，外部 agent 可能增加成本；如果需要消歧、跨技能组合、检查失败或利用历史经验，外部决策层可能有价值。需要用具体任务与同预算实验回答，不能仅凭架构名字决定。'))
 
 FOUNDATIONS = section('affordance',1,'从“合理”到“此刻做得到”', '''<p>软件 Agent 的工具通常有比较明确的参数与返回值。机器人技能的可用性还随物理状态变化：相同的“打开抽屉”，在把手可见、夹爪空闲与路径畅通时可能可行，在另一种状态下就可能失败。<strong>Affordance 在这里可以理解为与当前状态相关的行动可能性。</strong></p><p>SayCan 将语言层的相关性与技能的可执行性结合。用简化的教学记号，可以把技能选择理解成：</p><div class="equation">score(skill) = task relevance × estimated feasibility</div><p>这只是帮助理解的表达。论文中的语言评分、价值函数与训练设置需要回原文查看；分数不是天然校准的真实成功概率。重要的是：模型认为“下一步有道理”，仍需要能力估计提供具身依据。</p><p>整理早餐台时，移开纸盒可能不是最终目标中最显眼的一步，却可能让抽屉变得可打开。可执行性和长期任务价值也不完全相同：眼前最容易完成的技能，不一定是整体最好的选择。</p>''')
 FOUNDATIONS += section('feedback',2,'反馈使计划成为过程', '''<p>SayCan 帮助我们理解选择动作前的判断；Inner Monologue 强调执行期间如何更新判断。系统将场景、成功检测或人类反馈引入语言上下文，让后续计划随环境改变。</p><p>例如机器人尝试打开抽屉后，看到抽屉仍关闭。有效的闭环应重新考虑抓取位置、把手识别或是否存在障碍。简单重复同一条计划，并没有利用失败中的信息。</p>'''+table(['信息','它回答什么','仍然存在的疑问'],[
@@ -101,7 +104,7 @@ EXPERIMENTS += section('extend',3,'把小实验延伸成研究，而不是扩成
 EXPERIMENTS += section('proposal',4,'提交一个一页研究提案', '''<ol><li><strong>现象：</strong>写出一个具体失败，不用“泛化不好”概括全部问题。</li><li><strong>假设：</strong>说明哪个机制可能解释失败，提出可被否定的预测。</li><li><strong>条件：</strong>设备、环境、模型、观察权限、数据来源与预算。</li><li><strong>对照：</strong>固定基线、预算匹配基线、主要改动和一个消融。</li><li><strong>测量：</strong>完成率、成本、误判、介入与失败类型。</li><li><strong>结论边界：</strong>说明结果支持什么，以及没有验证什么。</li></ol><p>当你能解释“为什么选择这个对照”以及“什么结果会改变自己的判断”，这份读物就开始转化成你的研究能力了。</p>''')
 
 CHAPTERS = [
-('index.html','阅读起点','从 Agent 到<br>Agentic Robotics','理解二十篇论文之间的联系，找到适合自己设备与兴趣的第一个研究问题。',INTRO,[('map','研究问题全景'),('route','建议阅读顺序'),('outcomes','三个学习产出')]),
+('index.html','阅读起点','从 Agent 到<br>Agentic Robotics',f'理解{N} 篇论文之间的联系，找到适合自己设备与兴趣的第一个研究问题。',INTRO,[('map','研究问题全景'),('route','建议阅读顺序'),('outcomes','三个学习产出')]),
 ('foundations.html','规划与具身依据','规划，怎样获得<br>具身依据？','从语言上的合理，走向当前状态下可执行的决策。',FOUNDATIONS,[('affordance','相关性与可执行性'),('feedback','反馈与计划更新'),('partial','不完整的观察'),('terms','机器人词汇')]),
 ('grounding.html','程序、空间与动作','语言，怎样连接<br>空间与动作？','比较技能调用、程序生成与几何约束，辨认接口中隐含的能力。',GROUNDING,[('interface','输出接口'),('geometry','几何表示'),('scene','场景与状态')]),
 ('policies.html','VLA 与策略编排','把学习策略放在<br>合适的位置','先理解策略的能力边界，再研究何时调用、怎样交接。',POLICIES,[('vla','理解 VLA'),('granularity','技能的不同载体'),('handoff','策略交接')]),

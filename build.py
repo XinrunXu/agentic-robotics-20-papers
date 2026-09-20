@@ -38,11 +38,11 @@ def render_page(slug, title, eyebrow, intro, body, nav, toc=(), prev=None, nxt=N
     contents = ''.join(f'<a href="#{anchor}">{label}</a>' for anchor,label in toc)
     pager = '<nav class="page-turn" aria-label="章节翻页">'
     pager += f'<a href="{prev[0]}"><small>上一{pager_label}</small>{prev[1]}</a>' if prev else '<span></span>'
-    pager += f'<a href="{nxt[0]}"><small>下一{pager_label} →</small>{nxt[1]}</a>' if nxt else '<a href="papers.html"><small>回到时间线</small>串起二十篇的问题脉络</a>'
+    pager += f'<a href="{nxt[0]}"><small>下一{pager_label} →</small>{nxt[1]}</a>' if nxt else '<a href="papers.html"><small>回到时间线</small>串起这些论文的问题脉络</a>'
     pager += '</nav>'
     plain_title = re.sub('<[^>]+>', ' ', title)
     html = f'''<!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{escape(plain_title)} · Agentic Robotics 研究讲义</title><meta name="description" content="面向已有 Agent 基础的研究生：通过 20 篇论文理解 Agentic Robotics 的问题脉络、方法边界与按设备条件开展的研究实验。"><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css?v={style_version}"><script src="app.js" defer></script></head>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{escape(plain_title)} · Agentic Robotics 研究讲义</title><meta name="description" content="面向已有 Agent 基础的研究生：通过多篇论文理解 Agentic Robotics 的问题脉络、方法边界与按设备条件开展的研究实验。"><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css?v={style_version}"><script src="app.js" defer></script></head>
 <body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a class="brand" href="index.html"><span class="brand-mark">AR</span><span>AGENTIC ROBOTICS <b>研究讲义</b></span></a><span class="edition">阅读 · 推演 · 实验</span><button class="menu-toggle" aria-expanded="false" aria-controls="sidebar">目录</button></header>
 <div class="layout"><aside class="sidebar" id="sidebar"><p class="nav-label">从 Agent 到物理世界</p><nav aria-label="讲义目录">{menu}</nav><div class="side-note">面向有 Agent 基础的研究生<br>文献范围：2022.04—2026.07<br>整理日期：2026.09.18</div></aside>
 <main id="main"><div class="chapter-meta">{eyebrow}</div><h1>{title}</h1><p class="lead">{intro}</p>{body}{talk}{pager}<footer>本讲义区分论文主张、教学推演与研究假设。引用以原论文为准；实验结果只在相应设置下成立。</footer></main>
@@ -96,7 +96,7 @@ def paper_body(p, number):
     n = NOTES[p['key']]
     e = escape
     source_links = ' · '.join(f'<a href="{source_url(p,anchor)}">{e(label)} ↗</a>' for label,anchor in n['sources'])
-    body = f'''<nav class="paper-breadcrumb" aria-label="论文位置"><a href="papers.html#{p['key']}">20 篇论文时间线</a><span> / {number:02}</span><a href="{p['chapter']}.html">回到相关章节 →</a></nav><p class="paper-full-title">{e(p['title'])}</p><div class="paper-bibliography"><span>首发 {p['date']}</span><span>精读版本 {n['version']}</span><a href="{source_url(p)}">阅读原文 ↗</a></div><div class="abstract paper-memory"><strong>先记住这组证据</strong><p>{e(n['result'])}</p></div>'''
+    body = f'''<nav class="paper-breadcrumb" aria-label="论文位置"><a href="papers.html#{p['key']}">{len(PAPERS)} 篇论文时间线</a><span> / {number:02}</span><a href="{p['chapter']}.html">回到相关章节 →</a></nav><p class="paper-full-title">{e(p['title'])}</p><div class="paper-bibliography"><span>首发 {p['date']}</span><span>精读版本 {n['version']}</span><a href="{source_url(p)}">阅读原文 ↗</a></div><div class="abstract paper-memory"><strong>先记住这组证据</strong><p>{e(n['result'])}</p></div>'''
     body += '<nav class="paper-jumps" aria-label="精读快速跳转"><a href="#method">看方法</a><a href="#results">看实验</a><a href="#ablation">看消融与边界</a><a href="#practice">做研究练习</a></nav>'
     body += f'<section id="problem"><h2><span>01</span>这篇要解决什么？</h2><p>{e(n["why"])}</p></section>'
     body += f'<section id="scene"><h2><span>02</span>先看一个场景</h2><div class="scene"><span class="small-label">具体情境 · 先有画面，再看机制</span><p>{e(n["scene"])}</p></div></section>'
@@ -110,7 +110,7 @@ def paper_body(p, number):
     body += table([e(x) for x in n['headers']], [[e(x) for x in row] for row in n['rows']])
     body += f'<p class="source-note">原始证据：{source_links}</p><div class="result-interpretation"><strong>怎样读这组数字</strong><p>{e(n["findings"])}</p></div></section>'
     body += f'<section id="ablation"><h2><span>06</span>收益来自哪里，又停在哪里？</h2><h3>消融与机制证据</h3><p>{e(n["ablation"])}</p><h3>结论的适用边界</h3><p>{e(n["boundary"])}</p></section>'
-    body += f'<section id="connect"><h2><span>07</span>放回二十篇的脉络</h2><p>{e(n["transfer"])}</p><p><a href="{p["chapter"]}.html">回到问题章节，对照相关方法 →</a></p></section>'
+    body += f'<section id="connect"><h2><span>07</span>放回全书的脉络</h2><p>{e(n["transfer"])}</p><p><a href="{p["chapter"]}.html">回到问题章节，对照相关方法 →</a></p></section>'
     body += f'<section id="practice"><h2><span>08</span>把阅读变成一个小研究</h2><div class="experiment"><span class="small-label">讲义提出的研究练习 · 不是论文复现结果</span><p>{e(n["exercise"])}</p></div>'
     body += think('先自己回答：这项实验怎样才有解释力？', e(n['answer']))
     body += '<div class="recall"><strong>合上原文后，试着回答</strong><ol><li>用自己的话说出这篇改变了哪个模块。</li><li>画出它的输入、输出和一次失败如何被处理。</li><li>复述一个结果，同时说清基线、指标与实验条件。这一问不给答案，材料在第 05 节。</li></ol>'
@@ -124,7 +124,7 @@ def paper_body(p, number):
     return body
 
 if __name__ == '__main__':
-    pages = CHAPTERS + [('papers.html','20 篇论文精读','二十篇论文，<br>记住方法与证据','2022.04—2026.07 · 按首次提交时间排序，逐篇解释方法、实验与结论。',paper_index(),[(f'y{y}',y) for y in ('2022','2023','2024','2025','2026')])]
+    pages = CHAPTERS + [('papers.html',f'{len(PAPERS)} 篇论文精读',f'{len(PAPERS)} 篇论文，<br>记住方法与证据','2022.04—2026.07 · 按首次提交时间排序，逐篇解释方法、实验与结论。',paper_index(),[(f'y{y}',y) for y in ('2022','2023','2024','2025','2026')])]
     nav = [(f'{i:02}',p[1],p[0]) for i,p in enumerate(pages)]
     for i,(slug,label,title,intro,body,toc) in enumerate(pages):
         prev = (pages[i-1][0],pages[i-1][1]) if i else None
