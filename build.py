@@ -7,6 +7,7 @@ import hashlib
 from content import CHAPTERS, table, think
 from papers import PAPERS
 from deep_readings import NOTES
+from figures import FIGURES
 from site_config import REPO, DISCUSSION_CATEGORY, GISCUS
 
 ROOT = Path(__file__).parent
@@ -67,6 +68,19 @@ def source_url(p, anchor=''):
     kind = n.get('source_kind', 'html')
     return f'https://arxiv.org/{kind}/{p["arxiv"]}{n["version"]}' + (f'#{anchor}' if anchor else '')
 
+def paper_figure(key):
+    """论文自己的框图 / 方法图，直接引用 arXiv 的 HTML 版插图。"""
+    f = FIGURES.get(key)
+    if not f:
+        return ''
+    src = f'https://arxiv.org/html/{f["ver"]}/{f["path"]}'
+    origin = f'https://arxiv.org/html/{f["ver"]}#{f["anchor"]}'
+    note = ' ' + escape(f['note']) if f.get('note') else ''
+    return (f'<figure class="paper-figure"><a href="{origin}" target="_blank" rel="noopener">'
+            f'<img src="{src}" alt="{escape(f["what"])}" loading="lazy" decoding="async"></a>'
+            f'<figcaption><b>原文 {f["label"]}</b>{escape(f["what"])}。图片由 arXiv 提供（{f["ver"]}），'
+            f'版权归论文作者；点击图片查看原文图注 ↗{note}</figcaption></figure>')
+
 def paper_body(p, number):
     n = NOTES[p['key']]
     e = escape
@@ -74,7 +88,7 @@ def paper_body(p, number):
     body = f'''<nav class="paper-breadcrumb" aria-label="论文位置"><a href="papers.html#{p['key']}">20 篇论文时间线</a><span> / {number:02}</span><a href="{p['chapter']}.html">回到相关章节 →</a></nav><p class="paper-full-title">{e(p['title'])}</p><div class="paper-bibliography"><span>首发 {p['date']}</span><span>精读版本 {n['version']}</span><a href="{source_url(p)}">阅读原文 ↗</a></div><div class="abstract paper-memory"><strong>先记住这组证据</strong><p>{e(n['result'])}</p></div>'''
     body += '<nav class="paper-jumps" aria-label="精读快速跳转"><a href="#method">看方法</a><a href="#results">看实验</a><a href="#ablation">看消融与边界</a><a href="#practice">做研究练习</a></nav>'
     body += f'<section id="problem"><h2><span>01</span>这篇要解决什么？</h2><p>{e(n["why"])}</p></section>'
-    body += '<section id="method"><h2><span>02</span>方法怎样运转？</h2><ol class="method-steps">'
+    body += f'<section id="method"><h2><span>02</span>方法怎样运转？</h2>{paper_figure(p["key"])}<ol class="method-steps">'
     for i,(title,desc) in enumerate(n['steps'],1):
         body += f'<li><span class="step-index">{i:02}</span><div><h3>{e(title)}</h3><p>{e(desc)}</p></div></li>'
     body += f'</ol><figure class="mechanism"><pre><code>{e(n["code"])}</code></pre><figcaption>机制示意 · 讲义编写的简化流程或伪代码，用来解释信息流；不是论文源码或可直接部署的控制程序。</figcaption></figure><p class="source-note">方法与结果的原文定位见<a href="#sources">本页引用</a>。</p></section>'
