@@ -4,8 +4,10 @@ from html.parser import HTMLParser
 from concurrent.futures import ThreadPoolExecutor
 import urllib.request
 from papers import PAPERS
+from deep_readings import NOTES
 
-VERSIONS = dict(zip((p['key'] for p in PAPERS), [2,1,4,1,2,2,2,1,1,2,1,2,2,3,2,1,1,4,1,2]))
+# 精读引用的版本就是要缓存的版本，避免两处各记一份
+VERSIONS = {key: int(note['version'].lstrip('v')) for key, note in NOTES.items()}
 CACHE = Path(__file__).parent / '.research'
 CACHE.mkdir(exist_ok=True)
 

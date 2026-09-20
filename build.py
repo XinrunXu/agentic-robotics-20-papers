@@ -14,6 +14,14 @@ ROOT = Path(__file__).parent
 DIST = ROOT / 'docs'
 DIST.mkdir(exist_ok=True)
 
+def span():
+    """文献时间范围，由 papers.py 的首发日期推导。"""
+    dates = sorted(p['date'] for p in PAPERS)
+    fmt = lambda d: d[:7].replace('-', '.')
+    return f'{fmt(dates[0])}—{fmt(dates[-1])}'
+
+YEARS = sorted({p['date'][:4] for p in PAPERS})
+
 def discussion(slug):
     """讨论入口：填了 GISCUS 就在页面内嵌评论区，只填 REPO 就给出讨论区链接。"""
     if not REPO:
@@ -44,7 +52,7 @@ def render_page(slug, title, eyebrow, intro, body, nav, toc=(), prev=None, nxt=N
     html = f'''<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{escape(plain_title)} · Agentic Robotics 研究讲义</title><meta name="description" content="面向已有 Agent 基础的研究生：通过多篇论文理解 Agentic Robotics 的问题脉络、方法边界与按设备条件开展的研究实验。"><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css?v={style_version}"><script src="app.js" defer></script></head>
 <body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a class="brand" href="index.html"><span class="brand-mark">AR</span><span>AGENTIC ROBOTICS <b>研究讲义</b></span></a><span class="edition">阅读 · 推演 · 实验</span><button class="menu-toggle" aria-expanded="false" aria-controls="sidebar">目录</button></header>
-<div class="layout"><aside class="sidebar" id="sidebar"><p class="nav-label">从 Agent 到物理世界</p><nav aria-label="讲义目录">{menu}</nav><div class="side-note">面向有 Agent 基础的研究生<br>文献范围：2022.04—2026.07<br>整理日期：2026.09.18</div></aside>
+<div class="layout"><aside class="sidebar" id="sidebar"><p class="nav-label">从 Agent 到物理世界</p><nav aria-label="讲义目录">{menu}</nav><div class="side-note">面向有 Agent 基础的研究生<br>文献范围：{span()}<br>整理日期：2026.09.18</div></aside>
 <main id="main"><div class="chapter-meta">{eyebrow}</div><h1>{title}</h1><p class="lead">{intro}</p>{body}{talk}{pager}<footer>本讲义区分论文主张、教学推演与研究假设。引用以原论文为准；实验结果只在相应设置下成立。</footer></main>
 <aside class="contents"><p class="nav-label">本页内容</p><nav aria-label="本页目录">{contents}</nav><button class="print-button" onclick="window.print()">打印本章 / 存为 PDF</button></aside></div></body></html>'''
     (DIST / slug).write_text(html, encoding='utf-8')
@@ -124,7 +132,7 @@ def paper_body(p, number):
     return body
 
 if __name__ == '__main__':
-    pages = CHAPTERS + [('papers.html',f'{len(PAPERS)} 篇论文精读',f'{len(PAPERS)} 篇论文，<br>记住方法与证据','2022.04—2026.07 · 按首次提交时间排序，逐篇解释方法、实验与结论。',paper_index(),[(f'y{y}',y) for y in ('2022','2023','2024','2025','2026')])]
+    pages = CHAPTERS + [('papers.html',f'{len(PAPERS)} 篇论文精读',f'{len(PAPERS)} 篇论文，<br>记住方法与证据',f'{span()} · 按首次提交时间排序，逐篇解释方法、实验与结论。',paper_index(),[(f'y{y}',y) for y in YEARS])]
     nav = [(f'{i:02}',p[1],p[0]) for i,p in enumerate(pages)]
     for i,(slug,label,title,intro,body,toc) in enumerate(pages):
         prev = (pages[i-1][0],pages[i-1][1]) if i else None
@@ -134,7 +142,7 @@ if __name__ == '__main__':
     for i,p in enumerate(PAPERS):
         prev = (f'paper-{PAPERS[i-1]["key"]}.html', PAPERS[i-1]['name']) if i else ('papers.html','论文时间线')
         nxt = (f'paper-{PAPERS[i+1]["key"]}.html', PAPERS[i+1]['name']) if i+1 < len(PAPERS) else None
-        render_page(f'paper-{p["key"]}.html',escape(p['name']),f'PAPER {i+1:02} / 20 · {escape(p["topic"])}',escape(NOTES[p['key']]['takeaway']),paper_body(p,i+1),nav,paper_toc,prev,nxt,'papers.html','篇')
+        render_page(f'paper-{p["key"]}.html',escape(p['name']),f'PAPER {i+1:02} / {len(PAPERS)} · {escape(p["topic"])}',escape(NOTES[p['key']]['takeaway']),paper_body(p,i+1),nav,paper_toc,prev,nxt,'papers.html','篇')
     export = [{**p,'evidence':NOTES[p['key']]['result'],'reading':NOTES[p['key']]} for p in PAPERS]
     (DIST/'papers.json').write_text(json.dumps(export,ensure_ascii=False,indent=2),encoding='utf-8')
     print(f'Built {len(pages)+len(PAPERS)} pages with {len(PAPERS)} complete paper readings.')

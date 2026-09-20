@@ -49,6 +49,8 @@ FIGURES = {
   what='agent 层把目标编译成可执行 session，runtime 层负责监督执行与独立验证'),
  'roboharness': dict(ver='2607.18060v2', path='harness.png', anchor='S3.F1', label='图 1',
   what='异构策略与理解、记忆、执行三类技能库组成的整体框架'),
+ 'emerge': dict(ver='2608.29896v2', path='2608.29896v2/framework_appendix.png', anchor='S2.F1', label='图 1',
+  what='Main Agent 维持活动任务上下文，调度感知、验证、监控等角色化 Sub Agent 与 Operational、Imagination、Evaluation 三类 Skill；结构化证据与技能结果在每次交互后更新任务状态，验证通过推进计划，失败先进入 Branch Stack 局部恢复，Episode 记忆贯穿全程'),
 }
 
 def local_file(key):

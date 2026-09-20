@@ -37,3 +37,5 @@
 本记录描述 2026-09-18 的检查结果。之后为公开发布所做的改动：生成目录由 `dist/` 改为 `docs/`，每页新增讨论区入口（`site_config.py`），阅读起点加入 Star 入口，图 1 改为分别标注三条回路的去向，20 篇精读各嵌入一张原文框图 / 方法图（`figures.py`）；`build.py` 与 `verify.py` 在每次改动后重新运行通过。
 
 原文图取自各论文的 arXiv HTML 版插图，由 `fetch_figures.py` 下载到 `docs/figures/` 随仓库托管，共 20 张、约 11 MB；19 篇取自精读所引用的版本，SayPlan 取自 v1（v2 无 HTML 版）。Harness VLA 与 SayCan 的原图宽度远超显示需要（4293 px、3494 px），统一重采样到 2000 px 宽；其余保持原始像素。图片版权归论文作者，页面标注出处、版本并链接回原文图注。`verify.py` 现在会检查这些图片文件是否存在。
+
+2026-09-21 追加 EMERGE-Policy（arXiv 2608.29896，精读引用 v2）：元数据、精读、原文图 1 与 systems 章衔接一并加入；篇数、页数与文献时间范围改为由 `papers.py` 推导，`build.py` 与 `verify.py` 重新运行通过（30 页、21 篇）。

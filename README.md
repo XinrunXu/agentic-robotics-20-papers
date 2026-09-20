@@ -64,4 +64,7 @@ python3 verify.py   # 检查内链、锚点、资源、文献范围与实验约�
 1. `papers.py` 加一条元数据，保持按 arXiv 首次提交日期排序。
 2. `deep_readings.py` 加一条精读，字段与既有条目一致。
 3. `figures.py` 加一条原文框图位置，再运行 `python3 fetch_figures.py <key>` 下载图片。
-4. `python3 build.py && python3 verify.py`。篇数、页数与文案中的数字都由 `papers.py` 推导，无需手改。
+4. `content.py` 里把它加入所属章节的 `refs([...])` 列表，并在章节正文补一句衔接。
+   `verify.py` 会检查章节页是否链接到该篇，漏了会报错。
+5. `python3 build.py && python3 verify.py`。篇数、页数、文献时间范围与文案中的
+   数字都由 `papers.py` 推导，无需手改。

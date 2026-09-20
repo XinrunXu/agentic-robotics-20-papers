@@ -144,4 +144,11 @@ dict(key='roboharness', name='RoboHarness', date='2026-07-20', arxiv='2607.18060
  boundary='方法依赖能力估计与可达的交接状态；独立策略各自高成功率不保证组合后的长程可靠性。',
  question='加入 bridge 后成功率提升，如何排除只是因为额外动作预算更多？',
  connection='回到 SayCan 的可执行性问题：这里需要判断的还包括策略之间的状态兼容性。'),
+dict(key='emerge', name='EMERGE-Policy', date='2026-08-30', arxiv='2608.29896', title='EMERGE-Policy: A Robot Mind Emerges Beyond a Single Policy', topic='证据分工编排', chapter='systems',
+ problem='编排系统常把感知、监控、验证与记忆整理的完整输出直接送进高层规划器，而规划下一步其实只需要其中很小一部分。',
+ mechanism='Main Agent 只维持紧凑的任务上下文并把指令拆成带完成判据的子目标；证据密集的处理交给各自带隔离上下文的角色化 Sub Agent，只回传结构化结论。异构后端按在决策循环中的功能登记为 Operational、Imagination、Evaluation 三类 Skill，验证不通过时先把局部恢复子目标压进 Branch Stack，压不动才动全局计划。',
+ evidence='检查角色化 Sub Agent 与单 Agent 在相同相机、工具、提示与交互预算下的对照；额外挂的五路相机与被放宽的每集步数上限要单独计入。',
+ boundary='执行与感知后端都是现成检查点，规划器是闭源模型，系统增益里混着额外观测与交互预算；作者自述缺少预算匹配的单 Agent 对照。',
+ question='把同样的五路相机、同样的工具与步数预算给一个单 Agent 基线，角色分工还剩下多少增益？',
+ connection='与 PhyAgentOS 对照完成判定该由谁做出，与 RoboHarness、Harness VLA 对照编排的对象是能力还是证据。'),
 ]
