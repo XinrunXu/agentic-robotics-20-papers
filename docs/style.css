@@ -13,3 +13,7 @@
 .paper-jumps{display:flex;gap:8px 22px;flex-wrap:wrap;font-size:13px;margin:0 0 30px;padding:12px 0;border-bottom:1px solid var(--line)}.paper-jumps a{text-decoration:none}.paper-jumps a:hover{text-decoration:underline}@media print{.paper-jumps{display:none}}
 
 .discuss{border-top:1px solid var(--line);margin-top:52px;padding-top:6px}.discuss h2{margin-top:22px}.discuss>p{font-size:15px;color:#4c5f6b}.discuss .giscus{margin:24px 0 8px}@media print{.discuss{display:none}}
+
+.loop-returns{display:grid;gap:9px;margin-top:20px}.loop-returns p{margin:0;border:1px dashed #a8b9c4;padding:9px 15px;font-size:13px;line-height:1.75;color:#4c5f6b}.loop-returns b{font-size:12px;color:var(--blue);letter-spacing:.3px;margin-right:10px}.loop-returns span{color:#7d8f9b;margin-right:9px}.loop-returns .return-short{margin-left:33%}.loop-memory{margin-top:15px;border:1px solid var(--line);background:#fbfcfd;padding:13px 16px;display:flex;flex-wrap:wrap;align-items:baseline;gap:5px 15px}.loop-memory small{font:10px ui-monospace,monospace;color:var(--blue);letter-spacing:1px}.loop-memory b{font-size:15px}.loop-memory span{font-size:12px;color:var(--muted)}.loop-memory em{font-style:normal;font-size:12px;color:var(--blue);margin-left:auto}
+@media(max-width:760px){.loop-returns .return-short{margin-left:0}.loop-memory em{margin-left:0}.loop-returns p{font-size:12px;padding:8px 12px}}
+@media print{.loop-returns p,.loop-memory{break-inside:avoid}}
