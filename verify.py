@@ -6,6 +6,8 @@ import importlib.util
 import json
 import re
 from content import CHAPTERS
+from extras import EXTRA_PAGES
+from extra_papers import EXTRA_PAPERS
 from papers import PAPERS
 from deep_readings import NOTES
 
@@ -32,8 +34,8 @@ class Page(HTMLParser):
 
 def main():
     pages = {p.name: Page(p.read_text()) for p in DIST.glob('*.html')}
-    # 页面 = 各章 + 时间线页 + 每篇精读
-    expected_pages = len(CHAPTERS) + 1 + len(PAPERS)
+    # 页面 = 各章 + 时间线页 + 补充阅读页 + 每篇精读
+    expected_pages = len(CHAPTERS) + 1 + len(EXTRA_PAGES) + len(PAPERS) + len(EXTRA_PAPERS)
     assert len(pages) == expected_pages, f'Expected {expected_pages} pages, got {len(pages)}'
     assert set(NOTES) == {p['key'] for p in PAPERS}
     assert len(PAPERS) == len({p['arxiv'] for p in PAPERS})
